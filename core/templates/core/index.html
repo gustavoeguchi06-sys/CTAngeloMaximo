@@ -1,0 +1,282 @@
+{% extends "core/base.html" %}
+{% load static core_extras %}
+
+{% block content %}
+{% wa trial_message as trial_url %}
+
+<section class="hero tone-black" id="inicio" aria-labelledby="hero-title">
+  {% if hero_image %}<img class="hero__bg" src="{{ hero_image }}" alt="" fetchpriority="high">{% endif %}
+  <div class="container hero__inner">
+    <div class="hero__copy">
+      <p class="eyebrow">Jiu-Jítsu · Boxe · Muay Thai</p>
+      <h1 class="hero__title" id="hero-title">
+        <span>Mais do que uma luta.</span>
+        <span class="hero__title-alt">Uma evolução constante.</span>
+      </h1>
+      <p class="hero__lede">Desenvolva sua técnica, disciplina e confiança no tatame. Faça parte da família {{ contact.name }}.</p>
+      <div class="hero__actions">
+        {% include "core/partials/btn.html" with href=trial_url label="Agende sua aula experimental" icon="whatsapp" external=True %}
+        {% include "core/partials/btn.html" with href="#a-academia" label="Conheça nossa academia" variant="ghost" %}
+      </div>
+      <ul class="hero__facts">
+        <li>{% include "core/partials/icon.html" with name="check" cls="" %}Aula experimental grátis</li>
+        <li>{% include "core/partials/icon.html" with name="check" cls="" %}Turmas infantil e adulto</li>
+        <li>{% include "core/partials/icon.html" with name="check" cls="" %}Boxe e Muay Thai</li>
+      </ul>
+    </div>
+    {% if not hero_image %}
+    <img class="hero__mark" src="{% static 'core/logo.png' %}" width="420" height="420" alt="Logo {{ contact.name }} — Brazilian Jiu Jitsu">
+    {% endif %}
+  </div>
+</section>
+
+<section class="section tone-white" id="a-academia" aria-labelledby="about-title">
+  <div class="container">
+    <div class="about">
+      <div class="about__copy" data-reveal>
+        <p class="eyebrow">Sobre a academia</p>
+        <h2 class="h2" id="about-title">Técnica, corpo e caráter no mesmo treino</h2>
+        <p class="lede">O {{ contact.name }} é um centro de treinamento de Jiu-Jítsu, Boxe e Muay Thai. Aqui o treino vai além do golpe: desenvolve a técnica, a condição física e a postura de quem pisa no tatame.</p>
+        <p class="lede">Do aluno que está começando ao atleta de competição, todos treinam com o mesmo princípio: respeito ao professor, ao parceiro e ao processo.</p>
+      </div>
+      <figure class="motto" data-reveal>
+        <blockquote class="motto__text">“{{ motto.text }}”</blockquote>
+        <figcaption class="motto__author">{{ motto.author }}</figcaption>
+      </figure>
+    </div>
+    <ul class="grid grid--values" data-reveal-group>
+      {% for value in values %}
+      <li class="card" data-reveal>
+        <span class="icon-box">{% include "core/partials/icon.html" with name=value.icon cls="" %}</span>
+        <h3 class="card__title">{{ value.title }}</h3>
+        <p class="card__text">{{ value.text }}</p>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<div class="belt" aria-hidden="true">
+  <div class="belt__tip" data-reveal-group><i data-reveal></i><i data-reveal></i><i data-reveal></i><i data-reveal></i></div>
+</div>
+
+<section class="section tone-gray" id="modalidades" aria-labelledby="mod-title">
+  <div class="container">
+    <header class="section__head" data-reveal>
+      <p class="eyebrow">Jiu-Jítsu · Boxe · Muay Thai</p>
+      <h2 class="h2" id="mod-title">Escolha o seu treino</h2>
+      <p class="lede">Turmas para adultos e crianças, treino de competição e aulas de boxe e muay thai. A primeira aula é por nossa conta.</p>
+    </header>
+    <ul class="grid" data-reveal-group>
+      {% for item in modalities %}
+      <li class="card card--hover" data-reveal>
+        <span class="pill">{{ item.tag }}</span>
+        <h3 class="card__title">{{ item.title }}</h3>
+        <p class="card__text">{{ item.text }}</p>
+        {% if item.link == "whatsapp" %}
+          {% wa item.message as item_url %}
+          <a class="card__link" href="{{ item_url }}" target="_blank" rel="noopener"><span>Consultar horários no WhatsApp</span>{% include "core/partials/icon.html" with name="arrow" cls="" %}</a>
+        {% else %}
+          <a class="card__link" href="#horarios"><span>Ver horários</span>{% include "core/partials/icon.html" with name="arrow" cls="" %}</a>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="section tone-black" id="professores" aria-labelledby="team-title">
+  <div class="container">
+    <header class="section__head" data-reveal>
+      <p class="eyebrow">Equipe técnica</p>
+      <h2 class="h2" id="team-title">Quem conduz o treino</h2>
+    </header>
+    <ul class="team" data-reveal-group>
+      {% for person in team %}
+      <li class="card person{% if person.featured %} person--featured{% endif %}" data-reveal>
+        <div class="person__avatar">
+          {% if person.photo %}<img src="{{ person.photo }}" alt="{{ person.name }}" loading="lazy" decoding="async" width="160" height="160">{% else %}<span aria-hidden="true">{{ person.initials }}</span>{% endif %}
+        </div>
+        <div class="person__body">
+          <h3 class="person__name">{{ person.name }}</h3>
+          <p class="person__role">{{ person.role }}</p>
+          {% if person.bio %}<p class="person__bio">{{ person.bio }}</p>{% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="section tone-white" id="horarios" aria-labelledby="sched-title">
+  <div class="container">
+    <header class="section__head" data-reveal>
+      <p class="eyebrow">Segunda a sábado · Jiu-Jítsu</p>
+      <h2 class="h2" id="sched-title">Horários das aulas</h2>
+      <p class="lede">Escolha o dia e veja as turmas. Para boxe e muay thai, confirme turmas e horários pelo WhatsApp.</p>
+    </header>
+    <div class="schedule" data-schedule data-reveal>
+      <div class="schedule__tabs" role="tablist" aria-label="Dia da semana">
+        {% for day in schedule %}
+        <button class="schedule__tab" type="button" role="tab" id="tab-{{ day.id }}" aria-controls="day-{{ day.id }}" aria-selected="false" tabindex="-1" data-day="{{ day.id }}">{{ day.short }}</button>
+        {% endfor %}
+      </div>
+      <div class="schedule__days">
+        {% for day in schedule %}
+        <section class="day" id="day-{{ day.id }}" role="tabpanel" aria-labelledby="tab-{{ day.id }}" data-day="{{ day.id }}">
+          <header class="day__head">
+            <h3 class="day__name">{{ day.name }}</h3>
+            <span class="day__mode">{{ day.mode }}</span>
+          </header>
+          <ul class="day__list">
+            {% for slot in day.slots %}
+            <li><span class="day__time">{{ slot.time }}</span><span class="day__label">{{ slot.label }}</span></li>
+            {% endfor %}
+          </ul>
+        </section>
+        {% endfor %}
+      </div>
+    </div>
+    <p class="note" data-reveal>Dúvida sobre um horário? <a href="{{ trial_url }}" target="_blank" rel="noopener">Fale com a gente no WhatsApp</a>.</p>
+  </div>
+</section>
+
+<section class="section tone-gray" id="planos" aria-labelledby="plans-title">
+  <div class="container">
+    <header class="section__head" data-reveal>
+      <p class="eyebrow">Aula experimental grátis</p>
+      <h2 class="h2" id="plans-title">Valores</h2>
+      <p class="lede">A aula experimental é grátis em qualquer plano. Infantil vale até 12 anos.</p>
+    </header>
+    <ul class="grid" data-reveal-group>
+      {% for plan in plans %}
+      {% wa plan.message as plan_url %}
+      <li class="card plan{% if plan.featured %} plan--featured{% endif %}" data-reveal>
+        {% if plan.flag %}<span class="pill">{{ plan.flag }}</span>{% endif %}
+        <h3 class="plan__name">{{ plan.name }}</h3>
+        <p class="plan__price"><span class="plan__cur">R$</span>{{ plan.price }}</p>
+        <p class="plan__per">{{ plan.per }}</p>
+        <ul class="plan__features">
+          {% for feature in plan.features %}<li>{{ feature }}</li>{% endfor %}
+        </ul>
+        {% if plan.featured %}
+          {% include "core/partials/btn.html" with href=plan_url label=plan.cta external=True %}
+        {% else %}
+          {% include "core/partials/btn.html" with href=plan_url label=plan.cta variant="ghost" external=True %}
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="section tone-white" id="filiais" aria-labelledby="units-title">
+  <div class="container">
+    <header class="section__head" data-reveal>
+      <p class="eyebrow">{{ units|length }} unidades</p>
+      <h2 class="h2" id="units-title">Filiais</h2>
+      <p class="lede">Uma equipe, várias unidades. Treine na que fica mais perto de você.</p>
+    </header>
+    <ul class="grid" data-reveal-group>
+      {% for unit in units %}
+      <li class="card" data-reveal>
+        <span class="icon-box">{% include "core/partials/icon.html" with name="pin" cls="" %}</span>
+        <h3 class="card__title">{{ unit.name }}</h3>
+        <p class="card__text">{{ unit.place }}</p>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+{% if gallery %}
+<section class="section tone-black" id="galeria" aria-labelledby="gallery-title">
+  <div class="container">
+    <header class="section__head" data-reveal>
+      <p class="eyebrow">{{ gallery|length }} fotos</p>
+      <h2 class="h2" id="gallery-title">Galeria</h2>
+      <p class="lede">Treinos, alunos e eventos do {{ contact.name }}.</p>
+    </header>
+    <ul class="gallery" data-reveal-group>
+      {% for photo in gallery %}
+      <li data-reveal>
+        <button class="gallery__item" type="button" data-gallery-item data-full="{{ photo.url }}" data-alt="{{ photo.alt }}" aria-label="Ampliar foto {{ forloop.counter }} de {{ gallery|length }}">
+          <img src="{{ photo.url }}" alt="{{ photo.alt }}" loading="lazy" decoding="async" width="600" height="750">
+        </button>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  <dialog class="lightbox" data-lightbox aria-label="Foto ampliada">
+    <button class="lightbox__btn lightbox__close" type="button" aria-label="Fechar" data-lightbox-close>{% include "core/partials/icon.html" with name="close" cls="" %}</button>
+    <button class="lightbox__btn lightbox__prev" type="button" aria-label="Foto anterior" data-lightbox-prev>{% include "core/partials/icon.html" with name="left" cls="" %}</button>
+    <figure class="lightbox__figure">
+      <img src="" alt="">
+      <figcaption data-lightbox-count></figcaption>
+    </figure>
+    <button class="lightbox__btn lightbox__next" type="button" aria-label="Próxima foto" data-lightbox-next>{% include "core/partials/icon.html" with name="right" cls="" %}</button>
+  </dialog>
+</section>
+{% endif %}
+
+{% if testimonials %}
+<section class="section tone-gray" id="depoimentos" aria-labelledby="quotes-title">
+  <div class="container">
+    <header class="section__head" data-reveal>
+      <p class="eyebrow">Quem treina aqui</p>
+      <h2 class="h2" id="quotes-title">Depoimentos</h2>
+    </header>
+    <ul class="grid" data-reveal-group>
+      {% for item in testimonials %}
+      <li class="card" data-reveal>
+        <blockquote class="quote">
+          <p>“{{ item.text }}”</p>
+          <footer>{{ item.author }}{% if item.detail %} · {{ item.detail }}{% endif %}</footer>
+        </blockquote>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+{% endif %}
+
+<section class="section tone-{{ contact_tone }}" id="contato" aria-labelledby="contact-title">
+  <div class="container">
+    <header class="section__head" data-reveal>
+      <p class="eyebrow">Localização e contato</p>
+      <h2 class="h2" id="contact-title">Venha treinar</h2>
+    </header>
+    <div class="contact">
+      <ul class="contact__list" data-reveal-group>
+        <li class="card contact__row" data-reveal>
+          <span class="icon-box">{% include "core/partials/icon.html" with name="whatsapp" cls="" %}</span>
+          <div>
+            <p class="contact__label">WhatsApp</p>
+            <a class="contact__value" href="{{ trial_url }}" target="_blank" rel="noopener">{{ contact.whatsapp_display }}</a>
+          </div>
+        </li>
+        <li class="card contact__row" data-reveal>
+          <span class="icon-box">{% include "core/partials/icon.html" with name="pin" cls="" %}</span>
+          <div>
+            <p class="contact__label">Endereço</p>
+            <p class="contact__value">{% for line in contact.address_lines %}{{ line }}{% if not forloop.last %}<br>{% endif %}{% endfor %}</p>
+            <a class="contact__link" href="{{ maps_url }}" target="_blank" rel="noopener">Ver no mapa</a>
+          </div>
+        </li>
+        <li class="card contact__row" data-reveal>
+          <span class="icon-box">{% include "core/partials/icon.html" with name="instagram" cls="" %}</span>
+          <div>
+            <p class="contact__label">Instagram</p>
+            <a class="contact__value" href="{{ contact.instagram_url }}" target="_blank" rel="noopener">{{ contact.instagram_handle }}</a>
+          </div>
+        </li>
+      </ul>
+      <div class="cta-panel" data-reveal>
+        <h3 class="cta-panel__title">Aula experimental grátis</h3>
+        <p class="cta-panel__text">Chame no WhatsApp, escolha a modalidade e agende o seu dia no {{ contact.name }}.</p>
+        {% include "core/partials/btn.html" with href=trial_url label="Agendar pelo WhatsApp" icon="whatsapp" external=True %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

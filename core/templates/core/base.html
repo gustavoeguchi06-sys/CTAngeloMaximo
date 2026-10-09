@@ -1,0 +1,82 @@
+{% load static core_extras %}<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}CT Angelo Maximo | Jiu-Jítsu, Boxe e Muay Thai{% endblock %}</title>
+<meta name="description" content="Academia de Jiu-Jítsu, Boxe e Muay Thai. Turmas infantil e adulto, grade de horários, planos e aula experimental grátis. Agende pelo WhatsApp.">
+<meta name="theme-color" content="#000000">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="CT Angelo Maximo">
+<meta property="og:title" content="CT Angelo Maximo | Jiu-Jítsu, Boxe e Muay Thai">
+<meta property="og:description" content="Mais do que uma luta. Uma evolução constante. Agende sua aula experimental grátis.">
+<link rel="icon" type="image/png" href="{% static 'core/logo-sm.png' %}">
+<link rel="stylesheet" href="{% static 'core/css/site.css' %}">
+<script>document.documentElement.classList.add('js')</script>
+{% if json_ld %}<script type="application/ld+json">{{ json_ld|safe }}</script>{% endif %}
+</head>
+<body>
+<a class="skip" href="#conteudo">Pular para o conteúdo</a>
+{% include "core/partials/sprite.html" %}
+{% wa trial_message as trial_url %}
+
+<header class="nav tone-black" data-nav>
+  <div class="container nav__inner">
+    <a class="brand" href="#inicio" aria-label="{{ contact.name }} — início">
+      <img class="brand__mark" src="{% static 'core/logo-sm.png' %}" width="40" height="40" alt="">
+      <span class="brand__name">{{ contact.name }}</span>
+    </a>
+    <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="menu" aria-label="Abrir menu" data-menu-toggle>
+      {% include "core/partials/icon.html" with name="menu" cls="icon--menu" %}
+      {% include "core/partials/icon.html" with name="close" cls="icon--close" %}
+    </button>
+    <nav class="nav__menu" id="menu" aria-label="Principal" data-menu>
+      <ul class="nav__list">
+        {% for link in nav_links %}<li><a href="#{{ link.id }}" data-nav-link>{{ link.label }}</a></li>{% endfor %}
+      </ul>
+      {% include "core/partials/btn.html" with href=trial_url label="Agende uma aula experimental" small=True external=True %}
+    </nav>
+  </div>
+</header>
+
+<main id="conteudo">
+{% block content %}{% endblock %}
+</main>
+
+<footer class="footer tone-black">
+  <div class="container footer__grid">
+    <div class="footer__brand">
+      <a class="brand" href="#inicio" aria-label="{{ contact.name }} — voltar ao topo">
+        <img class="brand__mark" src="{% static 'core/logo-sm.png' %}" width="40" height="40" alt="">
+        <span class="brand__name">{{ contact.name }}</span>
+      </a>
+      <p class="footer__text">Jiu-Jítsu, Boxe e Muay Thai.<br>Mais do que uma luta. Uma evolução constante.</p>
+    </div>
+    <nav aria-label="Rodapé">
+      <h2 class="footer__title">Navegação</h2>
+      <ul class="footer__list">
+        {% for link in footer_links %}<li><a href="#{{ link.id }}">{{ link.label }}</a></li>{% endfor %}
+      </ul>
+    </nav>
+    <div>
+      <h2 class="footer__title">Contato</h2>
+      <ul class="footer__list">
+        <li><a href="{{ trial_url }}" target="_blank" rel="noopener">WhatsApp {{ contact.whatsapp_display }}</a></li>
+        <li>{% for line in contact.address_lines %}{{ line }}{% if not forloop.last %}<br>{% endif %}{% endfor %}</li>
+        <li><a href="{{ contact.instagram_url }}" target="_blank" rel="noopener">Instagram {{ contact.instagram_handle }}</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="container footer__bar">
+    <p>© {% now "Y" %} {{ contact.name }}. Todos os direitos reservados.</p>
+  </div>
+</footer>
+
+<a class="wa-float" href="{{ trial_url }}" target="_blank" rel="noopener" aria-label="Chamar no WhatsApp">
+  {% include "core/partials/icon.html" with name="whatsapp" cls="" %}
+</a>
+
+<script src="{% static 'core/js/site.js' %}" defer></script>
+</body>
+</html>

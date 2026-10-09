@@ -1,0 +1,1 @@
+<a class="btn btn--{{ variant|default:'solid' }}{% if small %} btn--sm{% endif %}" href="{{ href }}"{% if external %} target="_blank" rel="noopener"{% endif %}>{% if icon %}{% include "core/partials/icon.html" with name=icon cls="" %}{% endif %}<span>{{ label }}</span></a>
