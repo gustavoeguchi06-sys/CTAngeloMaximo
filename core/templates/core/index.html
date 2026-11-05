@@ -4,29 +4,36 @@
 {% block content %}
 {% wa trial_message as trial_url %}
 
-<section class="hero tone-black" id="inicio" aria-labelledby="hero-title">
-  {% if hero_image %}<img class="hero__bg" src="{{ hero_image }}" alt="" fetchpriority="high">{% endif %}
-  <div class="container hero__inner">
-    <div class="hero__copy">
-      <p class="eyebrow">Jiu-Jítsu · Boxe · Muay Thai</p>
-      <h1 class="hero__title" id="hero-title">
-        <span>Mais do que uma luta.</span>
-        <span class="hero__title-alt">Uma evolução constante.</span>
-      </h1>
-      <p class="hero__lede">Desenvolva sua técnica, disciplina e confiança no tatame. Faça parte da família {{ contact.name }}.</p>
-      <div class="hero__actions">
-        {% include "core/partials/btn.html" with href=trial_url label="Agende sua aula experimental" icon="whatsapp" external=True %}
-        {% include "core/partials/btn.html" with href="#a-academia" label="Conheça nossa academia" variant="ghost" %}
+<section class="cine tone-black" id="inicio" aria-labelledby="hero-title" data-cine>
+  {% if hero_image %}<img class="cine__photo" src="{{ hero_image }}" alt="" fetchpriority="high">{% endif %}
+  <div class="cine__aurora" aria-hidden="true"></div>
+  <div class="cine__grid" aria-hidden="true"></div>
+  <div class="cine__giant" aria-hidden="true" data-cine-giant>{{ hero.giant }}</div>
+
+  <div class="cine__marquee" aria-hidden="true">{% include "core/partials/marquee.html" with items=hero.marquee %}</div>
+
+  <div class="cine__main">
+    <p class="eyebrow">{{ hero.eyebrow }}</p>
+    <h1 class="cine__title" id="hero-title">{{ hero.title }}</h1>
+    <p class="cine__lede">{{ hero.lede }}</p>
+    <div class="cine__links">
+      <div class="cine__row">
+        <a class="cine__pill cine__pill--lg cine__pill--solid" href="{{ trial_url }}" target="_blank" rel="noopener" data-magnetic>{% include "core/partials/icon.html" with name="whatsapp" cls="" %}<span>Agende sua aula experimental</span></a>
+        <a class="cine__pill cine__pill--lg" href="{{ contact.instagram_url }}" target="_blank" rel="noopener" data-magnetic>{% include "core/partials/icon.html" with name="instagram" cls="" %}<span>{{ contact.instagram_handle }}</span></a>
       </div>
-      <ul class="hero__facts">
-        <li>{% include "core/partials/icon.html" with name="check" cls="" %}Aula experimental grátis</li>
-        <li>{% include "core/partials/icon.html" with name="check" cls="" %}Turmas infantil e adulto</li>
-        <li>{% include "core/partials/icon.html" with name="check" cls="" %}Boxe e Muay Thai</li>
-      </ul>
+      <nav class="cine__row" aria-label="Atalhos">
+        {% for link in hero_shortcuts %}<a class="cine__pill" href="#{{ link.id }}" data-magnetic>{{ link.label }}</a>{% endfor %}
+      </nav>
     </div>
-    {% if not hero_image %}
-    <img class="hero__mark" src="{% static 'core/logo.png' %}" width="420" height="420" alt="Logo {{ contact.name }}, Brazilian Jiu Jitsu">
-    {% endif %}
+  </div>
+
+  <div class="cine__bar">
+    <ul class="cine__facts">
+      <li>{% include "core/partials/icon.html" with name="check" cls="" %}Aula experimental grátis</li>
+      <li>{% include "core/partials/icon.html" with name="check" cls="" %}Turmas infantil e adulto</li>
+    </ul>
+    <p class="cine__pill cine__badge">{{ contact.address_lines.0 }} · WhatsApp {{ contact.whatsapp_display }}</p>
+    <a class="cine__pill cine__round" href="#a-academia" aria-label="Conheça a academia" data-magnetic>{% include "core/partials/icon.html" with name="down" cls="" %}</a>
   </div>
 </section>
 
@@ -107,6 +114,8 @@
     </ul>
   </div>
 </section>
+
+<div class="band" aria-hidden="true">{% include "core/partials/marquee.html" with items=bands.turmas %}</div>
 
 <section class="section tone-white" id="horarios" aria-labelledby="sched-title">
   <div class="container">
@@ -255,6 +264,8 @@
   </div>
 </section>
 {% endif %}
+
+<div class="band band--reverse" aria-hidden="true">{% include "core/partials/marquee.html" with items=bands.contato %}</div>
 
 <section class="section tone-{{ contact_tone }}" id="contato" aria-labelledby="contact-title">
   <div class="container">

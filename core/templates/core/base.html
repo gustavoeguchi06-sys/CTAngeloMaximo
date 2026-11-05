@@ -44,38 +44,16 @@
 {% block content %}{% endblock %}
 </main>
 
-<div class="cine" data-cine>
-  <footer class="cine__footer tone-black">
-    <div class="cine__aurora" aria-hidden="true"></div>
-    <div class="cine__grid" aria-hidden="true"></div>
-    <div class="cine__giant" aria-hidden="true" data-cine-giant>{{ footer.giant }}</div>
-
-    <div class="cine__marquee" aria-hidden="true">
-      <div class="cine__track">
-        {% for copy in "12" %}<div class="cine__group">{% for item in footer.marquee %}<span>{{ item }}</span><span class="cine__star">✦</span>{% endfor %}</div>{% endfor %}
-      </div>
-    </div>
-
-    <div class="cine__main">
-      <h2 class="cine__title" data-cine-reveal>{{ footer.title }}</h2>
-      <div class="cine__links" data-cine-reveal>
-        <div class="cine__row">
-          <a class="cine__pill cine__pill--lg" href="{{ trial_url }}" target="_blank" rel="noopener" data-magnetic>{% include "core/partials/icon.html" with name="whatsapp" cls="" %}<span>Agende sua aula experimental</span></a>
-          <a class="cine__pill cine__pill--lg" href="{{ contact.instagram_url }}" target="_blank" rel="noopener" data-magnetic>{% include "core/partials/icon.html" with name="instagram" cls="" %}<span>{{ contact.instagram_handle }}</span></a>
-        </div>
-        <nav class="cine__row" aria-label="Rodapé">
-          {% for link in footer_shortcuts %}<a class="cine__pill" href="#{{ link.id }}" data-magnetic>{{ link.label }}</a>{% endfor %}
-        </nav>
-      </div>
-    </div>
-
-    <div class="cine__bar">
-      <p class="cine__copy">© {% now "Y" %} {{ contact.name }}. Todos os direitos reservados.</p>
-      <p class="cine__pill cine__badge">{{ contact.address_lines.0 }} · WhatsApp {{ contact.whatsapp_display }}</p>
-      <a class="cine__pill cine__top" href="#inicio" aria-label="Voltar ao topo" data-magnetic>{% include "core/partials/icon.html" with name="up" cls="" %}</a>
-    </div>
-  </footer>
-</div>
+<footer class="footer tone-black">
+  <div class="container footer__inner">
+    <a class="brand" href="#inicio" aria-label="{{ contact.name }}, início">
+      <img class="brand__mark" src="{% static 'core/logo-sm.png' %}" width="40" height="40" alt="">
+      <span class="brand__name">{{ contact.name }}</span>
+    </a>
+    <p class="footer__copy">© {% now "Y" %} {{ contact.name }}. Todos os direitos reservados.</p>
+    <a class="cine__pill cine__round" href="#inicio" aria-label="Voltar ao topo" data-magnetic>{% include "core/partials/icon.html" with name="up" cls="" %}</a>
+  </div>
+</footer>
 
 <a class="wa-float" href="{{ trial_url }}" target="_blank" rel="noopener" aria-label="Chamar no WhatsApp">
   {% include "core/partials/icon.html" with name="whatsapp" cls="" %}

@@ -32,70 +32,52 @@
     window.matchMedia('(min-width: 1240px)').addEventListener('change', function (event) { if (event.matches) setOpen(false); });
   }
 
-  /* WhatsApp flutuante: escondido enquanto o hero (que já tem o botão) está visível. */
+  /* WhatsApp flutuante: escondido enquanto o topo (que já tem o botão) está visível. */
   var floatButton = $('.wa-float');
   var hero = $('#inicio');
-  /* Também some quando o rodapé (que tem o mesmo botão) aparece. */
-  var cineWrap = $('[data-cine]');
   if (floatButton && hero && hasObserver) {
-    var heroOn = true, footOn = false;
-    var syncFloat = function () { floatButton.classList.toggle('is-hidden', heroOn || footOn); };
-    syncFloat();
+    floatButton.classList.add('is-hidden');
     new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) { heroOn = entry.intersectionRatio > 0.35; syncFloat(); });
+      entries.forEach(function (entry) { floatButton.classList.toggle('is-hidden', entry.intersectionRatio > 0.35); });
     }, { threshold: [0, 0.35, 0.7, 1] }).observe(hero);
-    if (cineWrap) {
-      new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) { footOn = entry.intersectionRatio > 0.15; syncFloat(); });
-      }, { threshold: [0, 0.15, 0.5] }).observe(cineWrap);
-    }
   }
 
-  /* Rodapé: palavra gigante e conteúdo sobem conforme a cortina abre; pílulas magnéticas. */
-  if (cineWrap) {
-    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var giant = $('[data-cine-giant]', cineWrap);
-    var revealEls = $$('[data-cine-reveal]', cineWrap);
-    var clamp01 = function (v) { return v < 0 ? 0 : v > 1 ? 1 : v; };
-    var cineTicking = false;
-    var cineUpdate = function () {
-      cineTicking = false;
-      var rect = cineWrap.getBoundingClientRect(), vh = window.innerHeight;
-      if (rect.top > vh) return;
-      var end = Math.min(0, vh - rect.height);
-      var p1 = clamp01((vh * 0.8 - rect.top) / (vh * 0.8 - end));
-      var p2 = clamp01((vh * 0.4 - rect.top) / (vh * 0.4 - end));
-      if (giant) {
-        giant.style.transform = 'translate(-50%, ' + (10 * (1 - p1)).toFixed(2) + 'vh) scale(' + (0.8 + 0.2 * p1).toFixed(3) + ')';
-        giant.style.opacity = p1.toFixed(3);
-      }
-      revealEls.forEach(function (el, i) {
-        var q = clamp01((p2 - i * 0.15) / 0.85);
-        el.style.transform = 'translateY(' + (50 * (1 - q)).toFixed(1) + 'px)';
-        el.style.opacity = q.toFixed(3);
-      });
-    };
-    if (!reduceMotion) {
-      var cineSchedule = function () { if (!cineTicking) { cineTicking = true; requestAnimationFrame(cineUpdate); } };
-      window.addEventListener('scroll', cineSchedule, { passive: true });
-      window.addEventListener('resize', cineSchedule);
-      cineUpdate();
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      $$('[data-magnetic]', cineWrap).forEach(function (el) {
-        var base = 'background 0.4s, border-color 0.4s, color 0.4s, box-shadow 0.4s';
-        el.addEventListener('pointermove', function (event) {
-          if (event.pointerType !== 'mouse') return;
-          var r = el.getBoundingClientRect();
-          var x = event.clientX - r.left - r.width / 2, y = event.clientY - r.top - r.height / 2;
-          el.style.transition = 'transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1), ' + base;
-          el.style.transform = 'perspective(600px) translate(' + (x * 0.4).toFixed(1) + 'px, ' + (y * 0.4).toFixed(1) + 'px) rotateX(' + (-y * 0.15).toFixed(2) + 'deg) rotateY(' + (x * 0.15).toFixed(2) + 'deg) scale(1.05)';
-        });
-        el.addEventListener('pointerleave', function () {
-          el.style.transition = 'transform 1s cubic-bezier(0.3, 1.9, 0.5, 1), ' + base;
-          el.style.transform = '';
-        });
+  /* Topo: a palavra gigante desce e some devagar ao rolar (parallax). */
+  var giant = $('[data-cine-giant]');
+  if (giant && hero && !reduceMotion) {
+    var giantTicking = false;
+    var giantUpdate = function () {
+      giantTicking = false;
+      var p = Math.min(Math.max(window.scrollY / hero.offsetHeight, 0), 1);
+      giant.style.transform = 'translate(-50%, ' + (p * 14).toFixed(2) + 'vh) scale(' + (1 + p * 0.08).toFixed(3) + ')';
+      giant.style.opacity = (1 - p * 0.9).toFixed(3);
+    };
+    giant.addEventListener('animationend', function () {
+      giant.style.animation = 'none';
+      giantUpdate();
+      window.addEventListener('scroll', function () { if (!giantTicking) { giantTicking = true; requestAnimationFrame(giantUpdate); } }, { passive: true });
+    });
+  }
+
+  /* Botões magnéticos: seguem o mouse e voltam com elástico ao sair. */
+  if (!reduceMotion) {
+    $$('[data-magnetic], .btn').forEach(function (el) {
+      var base = 'background 0.4s, border-color 0.4s, color 0.4s, box-shadow 0.4s';
+      var strength = el.matches('.cine__pill, .cine__round') ? 0.4 : 0.25;
+      el.addEventListener('pointermove', function (event) {
+        if (event.pointerType !== 'mouse') return;
+        var r = el.getBoundingClientRect();
+        var x = event.clientX - r.left - r.width / 2, y = event.clientY - r.top - r.height / 2;
+        el.style.transition = 'transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1), ' + base;
+        el.style.transform = 'perspective(600px) translate(' + (x * strength).toFixed(1) + 'px, ' + (y * strength).toFixed(1) + 'px) rotateX(' + (-y * 0.15).toFixed(2) + 'deg) rotateY(' + (x * 0.1).toFixed(2) + 'deg) scale(1.04)';
       });
-    }
+      el.addEventListener('pointerleave', function () {
+        el.style.transition = 'transform 1s cubic-bezier(0.3, 1.9, 0.5, 1), ' + base;
+        el.style.transform = '';
+      });
+    });
   }
 
   /* Link do menu da seção visível. */

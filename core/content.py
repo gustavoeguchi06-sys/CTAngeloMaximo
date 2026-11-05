@@ -29,12 +29,20 @@ NAV = [
     {"id": "contato", "label": "Contato"},
 ]
 
-# Rodapé: faixa em movimento, palavra gigante ao fundo e atalhos em pílula.
-FOOTER = {
+# Topo da página: faixa em movimento, palavra gigante ao fundo e atalhos em pílula.
+HERO = {
+    "eyebrow": "Jiu-Jítsu · Boxe · Muay Thai",
     "title": "Pronto para começar?",
+    "lede": "Mais do que uma luta. Uma evolução constante. Faça parte da família CT Angelo Maximo.",
     "giant": "Maximo",
     "marquee": ["Jiu-Jítsu", "Boxe", "Muay Thai", "Disciplina", "Respeito", "Evolução constante", "Aula experimental grátis"],
     "shortcuts": ["horarios", "planos", "filiais", "contato"],
+}
+
+# Faixas em movimento entre seções.
+BANDS = {
+    "turmas": ["Kimono", "No-Gi", "Kids", "Kids II", "Feminino / Masculino", "Treino de competição", "Defesa pessoal"],
+    "contato": ["Aula experimental grátis", "Turmas infantil e adulto", "Agende pelo WhatsApp", "@ctangelomaximojj"],
 }
 
 VALUES = [
