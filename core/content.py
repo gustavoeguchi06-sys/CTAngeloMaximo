@@ -107,58 +107,73 @@ MOTTO = {
 # Grade de jiu-jítsu conforme a tabela oficial da academia.
 SCHEDULE = [
     {"id": "seg", "short": "Seg", "name": "Segunda", "mode": "Kimono", "slots": [
-        {"time": "7h – 8h30", "label": "Misto"},
-        {"time": "14h – 15h30", "label": "Misto"},
-        {"time": "18h – 19h30", "label": "Misto"},
-        {"time": "20h – 21h30", "label": "Misto"},
+        {"time": "7h às 8h30", "label": "Misto"},
+        {"time": "14h às 15h30", "label": "Misto"},
+        {"time": "18h às 19h30", "label": "Misto"},
+        {"time": "20h às 21h30", "label": "Misto"},
     ]},
     {"id": "ter", "short": "Ter", "name": "Terça", "mode": "Kimono", "slots": [
-        {"time": "7h – 8h30", "label": "Misto / No-Gi"},
-        {"time": "9h – 10h30", "label": "Kids"},
-        {"time": "16h – 17h30", "label": "Misto"},
-        {"time": "18h – 19h30", "label": "Kids II"},
-        {"time": "20h – 21h30", "label": "Feminino / Masculino"},
+        {"time": "7h às 8h30", "label": "Misto / No-Gi"},
+        {"time": "9h às 10h30", "label": "Kids"},
+        {"time": "16h às 17h30", "label": "Misto"},
+        {"time": "18h às 19h30", "label": "Kids II"},
+        {"time": "20h às 21h30", "label": "Feminino / Masculino"},
     ]},
     {"id": "qua", "short": "Qua", "name": "Quarta", "mode": "Kimono", "slots": [
-        {"time": "7h – 8h30", "label": "Misto"},
-        {"time": "14h – 15h30", "label": "Misto"},
-        {"time": "18h – 19h30", "label": "Misto"},
-        {"time": "20h – 21h30", "label": "Misto"},
+        {"time": "7h às 8h30", "label": "Misto"},
+        {"time": "14h às 15h30", "label": "Misto"},
+        {"time": "18h às 19h30", "label": "Misto"},
+        {"time": "20h às 21h30", "label": "Misto"},
     ]},
     {"id": "qui", "short": "Qui", "name": "Quinta", "mode": "Kimono", "slots": [
-        {"time": "7h – 8h30", "label": "Misto"},
-        {"time": "9h – 10h30", "label": "Kids"},
-        {"time": "16h – 17h30", "label": "Misto"},
-        {"time": "18h – 19h30", "label": "Kids II"},
-        {"time": "20h – 21h30", "label": "Feminino / Masculino"},
+        {"time": "7h às 8h30", "label": "Misto"},
+        {"time": "9h às 10h30", "label": "Kids"},
+        {"time": "16h às 17h30", "label": "Misto"},
+        {"time": "18h às 19h30", "label": "Kids II"},
+        {"time": "20h às 21h30", "label": "Feminino / Masculino"},
     ]},
     {"id": "sex", "short": "Sex", "name": "Sexta", "mode": "No-Gi", "slots": [
-        {"time": "7h – 8h30", "label": "Misto"},
-        {"time": "14h – 15h30", "label": "Misto"},
-        {"time": "16h – 17h30", "label": "Misto"},
-        {"time": "18h30 – 20h30", "label": "Misto"},
-        {"time": "19h30 – 20h30", "label": "Defesa pessoal"},
+        {"time": "7h às 8h30", "label": "Misto"},
+        {"time": "14h às 15h30", "label": "Misto"},
+        {"time": "16h às 17h30", "label": "Misto"},
+        {"time": "18h30 às 20h30", "label": "Misto"},
+        {"time": "19h30 às 20h30", "label": "Defesa pessoal"},
     ]},
     {"id": "sab", "short": "Sáb", "name": "Sábado", "mode": "Competição", "slots": [
-        {"time": "9h – 10h30", "label": "Treino de competição"},
+        {"time": "9h às 10h30", "label": "Treino de competição"},
     ]},
 ]
 
+# Períodos dos planos 3x por semana e Livre. "save" é o desconto sobre o mensal.
+PERIODS = [
+    {"id": "m", "label": "Mensal", "months": 1, "per": "por mês", "word": "mensal", "bill": "cobrado todo mês", "save": ""},
+    {"id": "t", "label": "Trimestral", "months": 3, "per": "no trimestre", "word": "trimestral", "bill": "cobrado a cada 3 meses", "save": "economize 25%"},
+    {"id": "s", "label": "Semestral", "months": 6, "per": "no semestre", "word": "semestral", "bill": "cobrado a cada 6 meses", "save": "economize 30%"},
+    {"id": "a", "label": "Anual", "months": 12, "per": "no ano", "word": "anual", "bill": "cobrado uma vez por ano", "save": "economize 35%"},
+]
+
+# Planos com seletor de período. Valores do período inteiro, por chave de PERIODS.
+PERIOD_PLANS = [
+    {
+        "name": "3x por semana",
+        "adult": {"m": 120, "t": 270, "s": 504, "a": 936},
+        "kid": {"m": 100, "t": 225, "s": 420, "a": 780},
+        "feature": "Três treinos por semana",
+    },
+    {
+        "name": "Livre", "featured": True, "flag": "Treine sem limite",
+        "adult": {"m": 150, "t": 337.5, "s": 630, "a": 1170},
+        "kid": {"m": 120, "t": 270, "s": 504, "a": 936},
+        "feature": "Treinos ilimitados na semana",
+    },
+]
+
+# Demais planos, só mensais.
 PLANS = [
     {
         "name": "Avulso", "price": "50", "per": "por aula",
         "features": ["Sem mensalidade"],
         "cta": "Agendar", "message": "Olá! Quero agendar uma aula avulsa.",
-    },
-    {
-        "name": "3x por semana", "price": "120", "per": "adulto · por mês",
-        "features": ["Infantil (até 12 anos): R$ 100/mês", "Três treinos por semana"],
-        "cta": "Começar", "message": "Olá! Quero saber mais sobre o plano 3x por semana.",
-    },
-    {
-        "name": "Livre", "price": "150", "per": "adulto · por mês", "featured": True, "flag": "Treine sem limite",
-        "features": ["Infantil (até 12 anos): R$ 120/mês", "Treinos ilimitados na semana"],
-        "cta": "Começar", "message": "Olá! Quero saber mais sobre o plano Livre.",
     },
     {
         "name": "Pai e filho", "price": "200", "per": "3x por semana · a dupla, por mês",
@@ -169,16 +184,6 @@ PLANS = [
         "name": "Familiar 3 pessoas ou +", "price": "90", "per": "adulto 3x por semana · por pessoa/mês",
         "features": ["Infantil 3x por semana: R$ 70/mês", "Adulto livre: R$ 120/mês", "Infantil livre: R$ 100/mês"],
         "cta": "Começar", "message": "Olá! Quero saber mais sobre o plano Familiar.",
-    },
-    {
-        "name": "Trimestral · Semestral · Anual", "price": "225", "per": "a partir de · valor do período",
-        "features": [
-            "3x/sem infantil: R$ 225 · R$ 420 · R$ 780",
-            "3x/sem adulto: R$ 270 · R$ 504 · R$ 936",
-            "Livre infantil: R$ 270 · R$ 504 · R$ 936",
-            "Livre adulto: R$ 337,50 · R$ 630 · R$ 1.170",
-        ],
-        "cta": "Começar", "message": "Olá! Quero saber mais sobre os planos trimestral, semestral e anual.",
     },
 ]
 

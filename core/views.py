@@ -55,6 +55,28 @@ def _json_ld():
     )
 
 
+def _brl(value):
+    """Valor em reais no formato brasileiro, sem centavos quando inteiro."""
+    if value == int(value):
+        return f"{int(value):,}".replace(",", ".")
+    return f"{value:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+
+
+def _period_plans():
+    first = content.PERIODS[0]["id"]
+    return [
+        {
+            **plan,
+            "adult_json": json.dumps(plan["adult"]),
+            "kid_json": json.dumps(plan["kid"]),
+            "price": _brl(plan["adult"][first]),
+            "kid_price": _brl(plan["kid"][first]),
+            "message": f"Olá! Quero saber mais sobre o plano {plan['name']} {content.PERIODS[0]['word']}.",
+        }
+        for plan in content.PERIOD_PLANS
+    ]
+
+
 def index(request):
     gallery = _gallery()
     testimonials = content.TESTIMONIALS
@@ -88,6 +110,9 @@ def index(request):
         "motto": content.MOTTO,
         "schedule": content.SCHEDULE,
         "plans": content.PLANS,
+        "periods": content.PERIODS,
+        "periods_json": json.dumps(content.PERIODS, ensure_ascii=False),
+        "period_plans": _period_plans(),
         "units": content.UNITS,
         "testimonials": testimonials,
         "gallery": gallery,

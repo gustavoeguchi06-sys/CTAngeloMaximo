@@ -25,7 +25,7 @@
       </ul>
     </div>
     {% if not hero_image %}
-    <img class="hero__mark" src="{% static 'core/logo.png' %}" width="420" height="420" alt="Logo {{ contact.name }} — Brazilian Jiu Jitsu">
+    <img class="hero__mark" src="{% static 'core/logo.png' %}" width="420" height="420" alt="Logo {{ contact.name }}, Brazilian Jiu Jitsu">
     {% endif %}
   </div>
 </section>
@@ -146,24 +146,40 @@
     <header class="section__head" data-reveal>
       <p class="eyebrow">Aula experimental grátis</p>
       <h2 class="h2" id="plans-title">Valores</h2>
-      <p class="lede">A aula experimental é grátis em qualquer plano. Infantil vale até 12 anos.</p>
+      <p class="lede">A aula experimental é grátis em qualquer plano. Infantil vale até 12 anos. Nos planos 3x por semana e Livre, quanto mais longo o período, maior o desconto.</p>
     </header>
+    <div class="period" role="radiogroup" aria-label="Período do plano" data-period-group data-periods='{{ periods_json }}' data-reveal>
+      {% for period in periods %}<button class="period__opt" type="button" role="radio" aria-checked="{% if forloop.first %}true{% else %}false{% endif %}" tabindex="{% if forloop.first %}0{% else %}-1{% endif %}" data-period="{{ period.id }}"><span class="period__name">{{ period.label }}</span><span class="period__save">{{ period.save|default:"sem desconto" }}</span></button>{% endfor %}
+    </div>
+    <ul class="plans-main" data-reveal-group>
+      {% for plan in period_plans %}
+      {% wa plan.message as plan_url %}
+      <li class="card plan{% if plan.featured %} plan--featured{% endif %}" data-reveal data-period-plan data-name="{{ plan.name }}" data-adult='{{ plan.adult_json }}' data-kid='{{ plan.kid_json }}'>
+        {% if plan.flag %}<span class="plan__badge">{{ plan.flag }}</span>{% endif %}
+        <h3 class="plan__name">{{ plan.name }}</h3>
+        <p class="plan__price"><span class="plan__cur">R$</span><span data-price>{{ plan.price }}</span></p>
+        <p class="plan__per">adulto · <span data-per>{{ periods.0.per }}</span></p>
+        <p class="plan__bill" data-bill>{{ periods.0.bill }}</p>
+        <ul class="plan__features">
+          <li>{% include "core/partials/icon.html" with name="check" cls="" %}<span>Infantil (até 12 anos): R$ <span data-kid>{{ plan.kid_price }}</span> <span data-kid-per>{{ periods.0.per }}</span></span></li>
+          <li>{% include "core/partials/icon.html" with name="check" cls="" %}<span>{{ plan.feature }}</span></li>
+        </ul>
+        <a class="btn btn--{% if plan.featured %}solid{% else %}ghost{% endif %}" data-cta href="{{ plan_url }}" target="_blank" rel="noopener"><span>Começar</span></a>
+      </li>
+      {% endfor %}
+    </ul>
+    <h3 class="plans__sub eyebrow">Outros planos</h3>
     <ul class="grid" data-reveal-group>
       {% for plan in plans %}
       {% wa plan.message as plan_url %}
-      <li class="card plan{% if plan.featured %} plan--featured{% endif %}" data-reveal>
-        {% if plan.flag %}<span class="pill">{{ plan.flag }}</span>{% endif %}
+      <li class="card plan" data-reveal>
         <h3 class="plan__name">{{ plan.name }}</h3>
         <p class="plan__price"><span class="plan__cur">R$</span>{{ plan.price }}</p>
         <p class="plan__per">{{ plan.per }}</p>
         <ul class="plan__features">
-          {% for feature in plan.features %}<li>{{ feature }}</li>{% endfor %}
+          {% for feature in plan.features %}<li>{% include "core/partials/icon.html" with name="check" cls="" %}<span>{{ feature }}</span></li>{% endfor %}
         </ul>
-        {% if plan.featured %}
-          {% include "core/partials/btn.html" with href=plan_url label=plan.cta external=True %}
-        {% else %}
-          {% include "core/partials/btn.html" with href=plan_url label=plan.cta variant="ghost" external=True %}
-        {% endif %}
+        {% include "core/partials/btn.html" with href=plan_url label=plan.cta variant="ghost" external=True %}
       </li>
       {% endfor %}
     </ul>

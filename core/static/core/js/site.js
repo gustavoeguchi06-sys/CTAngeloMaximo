@@ -109,6 +109,89 @@
     });
   }
 
+  /* Planos: período (mensal, trimestral, semestral, anual), preço animado e confete. */
+  var periodGroup = $('[data-period-group]');
+  if (periodGroup) {
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var P = {};
+    JSON.parse(periodGroup.dataset.periods).forEach(function (p) { P[p.id] = { n: p.months, per: p.per, word: p.word, bill: p.bill }; });
+    var opts = $$('[data-period]', periodGroup);
+    var cards = $$('[data-period-plan]');
+    var brl = function (v) { return v.toLocaleString('pt-BR', { minimumFractionDigits: v % 1 ? 2 : 0, maximumFractionDigits: 2 }); };
+    var tween = function (el, to) {
+      var from = el._v == null ? to : el._v;
+      el._v = to;
+      cancelAnimationFrame(el._raf);
+      if (reduce || from === to) { el.textContent = brl(to); return; }
+      var start = performance.now();
+      var step = function (now) {
+        var t = Math.min((now - start) / 500, 1), e = 1 - Math.pow(1 - t, 3);
+        el.textContent = t < 1 ? brl(Math.round(from + (to - from) * e)) : brl(to);
+        if (t < 1) el._raf = requestAnimationFrame(step);
+      };
+      el._raf = requestAnimationFrame(step);
+    };
+    var confetti = function (origin, count) {
+      if (reduce) return;
+      var canvas = doc.createElement('canvas');
+      canvas.className = 'confetti';
+      doc.body.appendChild(canvas);
+      var dpr = window.devicePixelRatio || 1, ctx = canvas.getContext('2d');
+      canvas.width = innerWidth * dpr; canvas.height = innerHeight * dpr; ctx.scale(dpr, dpr);
+      var colors = ['#000000', '#262626', '#4d4d4d', '#a3a3a3'];
+      var parts = [];
+      for (var i = 0; i < count; i++) {
+        var ang = (-90 + (Math.random() - 0.5) * 60) * Math.PI / 180, sp = 8 + Math.random() * 8;
+        parts.push({ x: origin.x, y: origin.y, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp, r: 2.5 + Math.random() * 2.5, c: colors[i % colors.length] });
+      }
+      var tick = 0;
+      var frame = function () {
+        tick++;
+        ctx.clearRect(0, 0, innerWidth, innerHeight);
+        ctx.globalAlpha = Math.max(0, 1 - tick / 110);
+        parts.forEach(function (p) {
+          p.vx *= 0.94; p.vy = p.vy * 0.94 + 0.6; p.x += p.vx; p.y += p.vy;
+          ctx.fillStyle = p.c; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.2832); ctx.fill();
+        });
+        if (tick < 110) requestAnimationFrame(frame); else canvas.remove();
+      };
+      requestAnimationFrame(frame);
+    };
+    var currentPeriod = Object.keys(P)[0];
+    var apply = function (key, btn) {
+      var prevN = P[currentPeriod].n;
+      currentPeriod = key;
+      opts.forEach(function (o) { var on = o.dataset.period === key; o.setAttribute('aria-checked', String(on)); o.tabIndex = on ? 0 : -1; });
+      var p = P[key];
+      cards.forEach(function (card) {
+        var adult = JSON.parse(card.dataset.adult)[key], kid = JSON.parse(card.dataset.kid)[key];
+        tween($('[data-price]', card), adult);
+        $('[data-per]', card).textContent = p.per;
+        $('[data-bill]', card).textContent = p.n === 1 ? p.bill : 'equivale a R$ ' + brl(Math.round(adult / p.n * 100) / 100) + '/mês, ' + p.bill;
+        $('[data-kid]', card).textContent = brl(kid);
+        $('[data-kid-per]', card).textContent = p.per;
+        var cta = $('[data-cta]', card);
+        cta.href = cta.href.split('?')[0] + '?text=' + encodeURIComponent('Olá! Quero saber mais sobre o plano ' + card.dataset.name + ' ' + p.word + '.');
+      });
+      if (btn && p.n > prevN) {
+        var r = btn.getBoundingClientRect();
+        confetti({ x: r.left + r.width / 2, y: r.top + r.height / 2 }, 30 + p.n * 3);
+      }
+    };
+    cards.forEach(function (card) { $('[data-price]', card)._v = JSON.parse(card.dataset.adult)[currentPeriod]; });
+    opts.forEach(function (o, index) {
+      o.addEventListener('click', function () { if (o.dataset.period !== currentPeriod) apply(o.dataset.period, o); });
+      o.addEventListener('keydown', function (event) {
+        var stepK = (event.key === 'ArrowRight' || event.key === 'ArrowDown') ? 1 : (event.key === 'ArrowLeft' || event.key === 'ArrowUp') ? -1 : 0;
+        if (!stepK) return;
+        event.preventDefault();
+        var next = opts[(index + stepK + opts.length) % opts.length];
+        apply(next.dataset.period, next);
+        next.focus();
+      });
+    });
+  }
+
   /* Galeria: visualização ampliada. */
   var lightbox = $('[data-lightbox]');
   if (lightbox && typeof lightbox.showModal === 'function') {
