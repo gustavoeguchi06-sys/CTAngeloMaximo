@@ -29,6 +29,14 @@ NAV = [
     {"id": "contato", "label": "Contato"},
 ]
 
+# Rodapé: faixa em movimento, palavra gigante ao fundo e atalhos em pílula.
+FOOTER = {
+    "title": "Pronto para começar?",
+    "giant": "Maximo",
+    "marquee": ["Jiu-Jítsu", "Boxe", "Muay Thai", "Disciplina", "Respeito", "Evolução constante", "Aula experimental grátis"],
+    "shortcuts": ["horarios", "planos", "filiais", "contato"],
+}
+
 VALUES = [
     {"icon": "shield", "title": "Disciplina", "text": "Rotina de treino, pontualidade e foco dentro e fora do tatame."},
     {"icon": "heart", "title": "Respeito", "text": "Pelo professor, pelo parceiro de treino e por quem está começando."},

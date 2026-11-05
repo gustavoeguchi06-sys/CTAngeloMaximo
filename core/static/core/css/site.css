@@ -302,17 +302,55 @@ a.contact__value:hover, .contact__link:hover { text-decoration: underline; }
 .cta-panel__text { color: var(--muted); max-width: 40ch; }
 @media (max-width: 899px) { .contact { grid-template-columns: minmax(0, 1fr); } }
 
-/* ========== Rodapé ========== */
-.footer { background: var(--bg); color: var(--fg); border-top: 1px solid var(--line); }
-.footer__grid { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 32px; padding-block: clamp(40px, 7vw, 72px); }
-.footer__text { margin-top: 16px; color: var(--muted); font-size: 0.9375rem; }
-.footer__title { margin-bottom: 14px; font-family: var(--font-mono); font-size: 0.75rem; font-weight: 400; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
-.footer__list { display: grid; gap: 8px; font-size: 0.9375rem; color: var(--muted); }
-.footer__list a { text-decoration: none; color: var(--fg); }
-.footer__list a:hover { text-decoration: underline; }
-.footer__bar { padding-block: 20px; border-top: 1px solid var(--line); font-size: 0.8125rem; color: var(--muted); }
-@media (max-width: 899px) { .footer__grid { grid-template-columns: minmax(0, 1fr); } }
-@media (max-width: 860px) { .footer__bar { padding-bottom: 88px; } }
+/* ========== Rodapé cinematográfico ==========
+   A faixa .cine fica no fluxo da página e recorta (clip-path) o rodapé fixo por baixo dela:
+   ao rolar até o fim, o rodapé é revelado como uma cortina. */
+.cine { position: relative; height: 100vh; height: 100svh; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); background: var(--black); }
+.cine__footer { position: fixed; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; height: 100vh; height: 100svh; overflow: hidden; background: var(--bg); color: var(--fg); }
+html:not(.js) .cine { height: auto; clip-path: none; }
+html:not(.js) .cine__footer { position: relative; height: auto; min-height: 100svh; }
+@media (max-height: 560px) {
+  .cine { height: auto; clip-path: none; }
+  .cine__footer { position: relative; height: auto; min-height: 100svh; }
+}
+
+.cine__aurora { position: absolute; left: 50%; top: 50%; width: 80vw; height: 60vh; border-radius: 50%; background: radial-gradient(circle, rgba(255, 255, 255, 0.11) 0%, rgba(255, 255, 255, 0.04) 40%, transparent 70%); filter: blur(80px); transform: translate(-50%, -50%); animation: cine-breathe 8s ease-in-out infinite alternate; pointer-events: none; }
+.cine__grid { position: absolute; inset: 0; background-size: 60px 60px; background-image: linear-gradient(to right, rgba(255, 255, 255, 0.045) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.045) 1px, transparent 1px); -webkit-mask-image: linear-gradient(to bottom, transparent, #000 30%, #000 70%, transparent); mask-image: linear-gradient(to bottom, transparent, #000 30%, #000 70%, transparent); pointer-events: none; }
+.cine__giant { position: absolute; left: 50%; bottom: -5vh; transform: translateX(-50%); font-size: 26vw; font-weight: 900; line-height: 0.75; letter-spacing: -0.05em; text-transform: uppercase; white-space: nowrap; color: transparent; -webkit-text-stroke: 1px rgba(255, 255, 255, 0.07); background: linear-gradient(180deg, rgba(255, 255, 255, 0.13) 0%, transparent 60%); -webkit-background-clip: text; background-clip: text; pointer-events: none; user-select: none; }
+
+.cine__marquee { position: absolute; top: calc(var(--nav-h) + 36px); left: 0; z-index: 1; width: 100%; overflow: hidden; padding-block: 16px; border-block: 1px solid var(--line); background: rgba(0, 0, 0, 0.6); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6); transform: rotate(-2deg) scale(1.1); }
+.cine__track { display: flex; width: max-content; animation: cine-marquee 40s linear infinite; font-size: 0.8125rem; font-weight: 800; letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted); }
+.cine__group { display: flex; align-items: center; gap: 48px; padding-inline: 24px; }
+.cine__star { color: var(--white); opacity: 0.5; }
+
+.cine__main { position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: clamp(32px, 5vh, 48px); width: 100%; max-width: 1040px; margin-inline: auto; padding: calc(var(--nav-h) + 120px) var(--gutter) 24px; text-align: center; }
+.cine__title { font-size: clamp(2.75rem, 1rem + 7vw, 6rem); font-weight: 900; line-height: 0.95; letter-spacing: -0.04em; text-transform: uppercase; text-wrap: balance; color: transparent; background: linear-gradient(180deg, var(--white) 0%, rgba(255, 255, 255, 0.4) 100%); -webkit-background-clip: text; background-clip: text; filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.15)); }
+.cine__links { display: grid; justify-items: center; gap: 20px; width: 100%; }
+.cine__row { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 16px; }
+
+.cine__pill { display: inline-flex; align-items: center; justify-content: center; gap: 12px; min-height: 44px; padding: 10px 24px; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 999px; background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%); box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.1), inset 0 -1px 2px rgba(0, 0, 0, 0.8); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); color: var(--muted); font-size: 0.875rem; font-weight: 600; text-decoration: none; transition: transform 0.4s var(--ease), background 0.4s var(--ease), border-color 0.4s var(--ease), color 0.4s var(--ease), box-shadow 0.4s var(--ease); }
+a.cine__pill:hover { color: var(--fg); border-color: rgba(255, 255, 255, 0.25); background: linear-gradient(145deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 100%); box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.2); }
+.cine__pill--lg { min-height: 60px; padding: 16px 36px; color: var(--fg); font-size: 1rem; font-weight: 800; }
+.cine__pill .icon { width: 1.375rem; height: 1.375rem; color: var(--muted); transition: color 0.3s var(--ease), transform 0.3s var(--ease); }
+a.cine__pill:hover .icon { color: var(--fg); }
+
+.cine__bar { position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 16px 24px; padding: 0 clamp(24px, 5vw, 48px) 32px; }
+.cine__copy { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.cine__badge { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.04em; cursor: default; }
+.cine__top { width: 48px; height: 48px; min-height: 0; padding: 0; }
+.cine__top:hover .icon { transform: translateY(-4px); }
+
+@media (max-width: 767px) {
+  .cine__pill--lg { width: 100%; }
+  .cine__bar { flex-direction: column; padding-bottom: 24px; text-align: center; }
+  .cine__badge { order: -1; }
+  .cine__marquee { top: calc(var(--nav-h) + 20px); padding-block: 12px; }
+  .cine__main { padding-top: calc(var(--nav-h) + 96px); }
+  .cine__track { font-size: 0.75rem; }
+}
+
+@keyframes cine-breathe { from { transform: translate(-50%, -50%) scale(1); opacity: 0.6; } to { transform: translate(-50%, -50%) scale(1.1); opacity: 1; } }
+@keyframes cine-marquee { to { transform: translateX(-50%); } }
 
 /* ========== WhatsApp flutuante (celular e tablet) ========== */
 .wa-float { position: fixed; right: 16px; bottom: 16px; z-index: 45; display: none; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: var(--white); color: var(--black); border: 2px solid var(--black); box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35); transition: transform 0.2s var(--ease), opacity 0.25s var(--ease), visibility 0s linear 0s; }
@@ -328,6 +366,7 @@ a.contact__value:hover, .contact__link:hover { text-decoration: underline; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  .cine__aurora, .cine__track { animation: none; }
   .hero__copy > *, .hero__mark { animation: none; }
   .js [data-reveal], .js .belt i[data-reveal] { opacity: 1; transform: none; transition: none; }
   * { transition-duration: 0.01ms !important; }

@@ -104,6 +104,8 @@ def index(request):
         "trial_message": content.TRIAL_MESSAGE,
         "nav_links": content.NAV,
         "footer_links": footer_links,
+        "footer": content.FOOTER,
+        "footer_shortcuts": [link for link in footer_links if link["id"] in content.FOOTER["shortcuts"]],
         "values": content.VALUES,
         "modalities": content.MODALITIES,
         "team": team,
